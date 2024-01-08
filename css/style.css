@@ -1,0 +1,180 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: white;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;700;900&display=swap');
+
+body {
+    background-color: #121212;
+}
+
+.container {
+    width: 60%;
+    margin: 0 auto;
+    margin-bottom: 5rem;
+}
+
+/* 
+    MENU
+*/
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 2rem 0;
+}
+
+h1 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 900;
+    font-size: 3rem;
+    color: #00A8E1;
+}
+
+ul {
+    display: flex;
+    list-style: none;
+    gap: 3rem;
+}
+
+li {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size: 1.5rem;
+    color: #00A8E1;
+    cursor: pointer;
+}
+
+li.active {
+    font-weight: 700;
+}
+
+li:hover {
+    text-decoration: underline;
+}
+
+/* 
+    SEARCH
+*/
+
+.search {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.search > input {
+    width: 100%;
+    background-color: #212121;
+    border: none;
+    border-radius: 1rem;
+    padding: 0.8rem;
+    border: 2px solid #00A8E1;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+}
+
+.search > input:focus {
+    outline: none;
+}
+
+/* 
+    SECTIONS 
+*/
+
+.hidden {
+    display: none!important;
+}
+
+h2 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: #00A8E1;
+}
+
+/* 
+    DISPLAY
+*/
+
+.display {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
+
+.display > h2 {
+    margin-bottom: 0!important;
+    font-size: 1.5rem!important;
+}
+
+.display > .card {
+    background-color: #212121;
+    border-radius: 1rem;
+    width: 100%;
+    display: flex;
+}
+
+.display > .card > img {
+    width: 15%;
+    border-radius: 1rem 0 0 1rem;
+}
+
+.display > .card > .card_content {
+    width: 85%;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.display > .card > .card_content > .card_title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.display > .card > .card_content > .card_title > h3 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+}
+
+.display > .card > .card_content > .card_title > p {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size: 1.5rem;
+}
+
+.display > .card > .card_content > p {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-size: 1.5rem;
+    margin: 1rem 0;
+}
+
+.display > .card > .card_content > .card_actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.display > .card > .card_content > .card_actions > a, a > i {
+    font-family: 'Roboto', sans-serif;
+    color: #00A8E1;
+}
+
+.display > .card > .card_content > .card_actions > a:hover, a > i:hover {
+    cursor: pointer;
+    font-weight: 700;
+}
