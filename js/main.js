@@ -9,7 +9,7 @@ const options = {
 };
 
 //
-// GET HTML ELEMENTS
+// GET HTML ELEMENTS + CONSTANTS
 //
 
 // MENU
@@ -35,10 +35,10 @@ const tvshows_display = document.getElementById('tvshows_display');
 const favorites_display = document.getElementById('favorites_display');
 const search_display = document.getElementById('search_display');
 
-// ??
-const movies = document.getElementById('movies');
-const tvshows = document.getElementById('tvshows');
-const genres = document.getElementById('genres');
+// MISCELLANEOUS
+
+const add_to_favorites = '<i class="ti ti-heart-plus"> </i>Ajouter aux favoris';
+const remove_to_favorites = '<i class="ti ti-heart-minus"> </i>Retirer des favoris';
 
 // 
 // MENU
@@ -189,7 +189,10 @@ function getAllPopular(genre = null, type = null) {
         .then(data => {
             const movies = data.results;
             let output = '';
+            let fav_btn_content = '';
             for(let movie of movies) {
+                console.log(movie.title);
+                fav_btn_content = checkFavorite(movie.id, 'movie');
                 if (movie.overview.length > 350) {
                     movie.overview = movie.overview.substring(0,350) + "...";
                 }
@@ -203,7 +206,7 @@ function getAllPopular(genre = null, type = null) {
                         <p>${movie.overview}</p>
                         <div class="card_actions">
                             <a class="card_btn" id="see_details"><i class="ti ti-dots-circle-horizontal"> </i>Voir les détails</a>
-                            <a class="card_btn" id="add_favorites"><i class="ti ti-heart-plus"> </i>Ajouter au favoris</a>
+                            <a class="card_btn" id="add_favorites">${fav_btn_content}</a>
                         </div>
                     </div>
                 </div>`
@@ -216,9 +219,10 @@ function getAllPopular(genre = null, type = null) {
         .then(response => response.json())
         .then(data => {
             const tvshows = data.results;
-            console.log(tvshows);
             let output = '';
+            let fav_btn_content = '';
             for(let tvshow of tvshows) {
+                fav_btn_content = checkFavorite(tvshow.id, 'tvshow');
                 if (tvshow.overview.length > 350) {
                     tvshow.overview = tvshow.overview.substring(0,350) + "...";
                 }
@@ -233,7 +237,7 @@ function getAllPopular(genre = null, type = null) {
                         <p>${tvshow.overview}</p>
                         <div class="card_actions">
                             <a class="card_btn" id="see_details"><i class="ti ti-dots-circle-horizontal"> </i>Voir les détails</a>
-                            <a class="card_btn" id="add_favorites"><i class="ti ti-heart-plus"> </i>Ajouter au favoris</a>
+                            <a class="card_btn" id="add_favorites">${fav_btn_content}</a>
                         </div>
                     </div>
                 </div>`
@@ -257,7 +261,9 @@ function getGenres(type) {
 
 // 
 // FAVORITES (LOCALSTORAGE)
+// + Details Modal
 // 
+
 
 // Initialization of favorites
 if(!localStorage.getItem('favorites')) {
@@ -267,6 +273,21 @@ if(!localStorage.getItem('favorites')) {
 // Reset favorites
 function resetFavorites() {
     localStorage.setItem('favorites', JSON.stringify([]));
+}
+
+// Check if favorite
+// Return button content
+function checkFavorite(id, type) {
+    let favorites = JSON.parse(localStorage.getItem('favorites'));
+    const index = favorites.findIndex(favorite => favorite.id === id && favorite.type === type);
+    console.log(index);
+    if(index === -1) {
+        console.log('not favorite');
+        return add_to_favorites;
+    } else {
+        console.log('favorite');
+        return remove_to_favorites;
+    }
 }
 
 // Ajout ou suppression des favoris
