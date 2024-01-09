@@ -12,7 +12,12 @@ const options = {
 // GET HTML ELEMENTS + CONSTANTS
 //
 
+// LOADER
+
+const loader = document.getElementById('loader');
+
 // MENU
+
 const nav_movies = document.getElementById('nav_movies');
 const nav_tvshows = document.getElementById('nav_tvshows');
 const nav_favorites = document.getElementById('nav_favorites');
@@ -50,6 +55,29 @@ const modal_close_btn = document.getElementById('modal_close_btn');
 
 const add_to_favorites = '<i class="ti ti-heart-plus"> </i>Ajouter aux favoris';
 const remove_to_favorites = '<i class="ti ti-heart-minus"> </i>Retirer des favoris';
+
+let MoviesTv_params = {
+    movies: [{
+        page: 1,
+        genre: null
+    }],
+    tvshows: [{
+        page: 1,
+        genre: null
+    }],
+};
+
+// 
+// LOADER
+// 
+
+function showLoader(show) {
+    if(show) {
+        loader.style.display = 'flex';
+    } else {
+        loader.style.display = 'none';
+    }
+}
 
 // 
 // MENU
@@ -93,6 +121,7 @@ search_input.addEventListener('keyup', function (e) {
 
     clearTimeout(timeout);
     timeout = setTimeout(function () {
+        showLoader(true);
         tabChange('search');
         var search = search_input.value;
         if(search.length > 0) {
@@ -185,20 +214,20 @@ search_input.addEventListener('keyup', function (e) {
             tabChange('movies');
             search_display.innerHTML = '';
         }
+        showLoader(false);
     }, 1000);
 })
 
 // GET FUNCTIONS
 
-function getAllPopular(genre = null, type = null) {
-    let movies_url = 'https://api.themoviedb.org/3/discover/movie?language=fr';
-    let tvshows_url = 'https://api.themoviedb.org/3/discover/tv?language=fr';
-    if(genre != null) {
-        if(type === 'movie') {
-            movies_url += `&with_genres=${genre}`;
-        } else if(type === 'tvshow') {
-            tvshows_url += `&with_genres=${genre}`;
-        }
+function getAllPopular(data) {
+    let movies_url = `https://api.themoviedb.org/3/discover/movie?language=fr&page=${data.movies[0].page}`;
+    let tvshows_url = `https://api.themoviedb.org/3/discover/tv?language=fr&page=${data.tvshows[0].page}`;
+    if(data.movies[0].genre != null) {
+        movies_url += `&with_genres=${data.movies[0].genre}`;
+    }
+    if(data.tvshows[0].genre != null) {
+        tvshows_url += `&with_genres=${data.tvshows[0].genre}`;
     }
     fetch(movies_url, options)
     .then(response => response.json())
@@ -271,7 +300,7 @@ function getGenres() {
         const genres = data.genres;
         let output = '';
         for(let genre of genres) {
-            output += `<a data-id="${genre.id}" data-type="movie" id="genre">${genre.name}</a>`;
+            output += `<a data-id="${genre.id}" data-type="movie" id="movie-genre">${genre.name}</a>`;
         }
         genres_movies.innerHTML = output;
     })
@@ -283,15 +312,18 @@ function getGenres() {
         const genres = data.genres;
         let output = '';
         for(let genre of genres) {
-            output += `<a data-id="${genre.id}" data-type="tvshow" id="genre">${genre.name}</a>`;
+            output += `<a data-id="${genre.id}" data-type="tvshow" id="tv-genre">${genre.name}</a>`;
         }
         genres_tvshows.innerHTML = output;
     })
     .catch(err => console.error(err));
 }
 
-getAllPopular();
-getGenres();
+document.addEventListener("DOMContentLoaded", (event) => {
+    getGenres();
+    getAllPopular(MoviesTv_params);
+    showLoader(false);
+});
 
 // 
 // FAVORITES (LOCALSTORAGE)
@@ -340,6 +372,7 @@ function addOrRemoveFavorite(id, type, button) {
 }
 
 async function loadFavorites() {
+    showLoader(true);
     let favorites = JSON.parse(localStorage.getItem('favorites'));
     let output = '';
     for(let favorite of favorites) {
@@ -389,6 +422,7 @@ async function loadFavorites() {
         }
     }
     favorites_display.innerHTML = output;
+    showLoader(false);
 }
 
 
@@ -488,11 +522,45 @@ document.addEventListener('click', function(e) {
             }
             getAllPopular();
         }
-    } else if(e.target.id === 'genre') {
-        let genre_id = e.target.dataset.id;
-        let genre_type = e.target.dataset.type;
-        getAllPopular(genre_id, genre_type);
+    } else if(e.target.id === 'movie-genre' || e.target.id === 'tv-genre') {
+        if(!e.target.classList.contains('active')) {
+            let genre_id = e.target.dataset.id;
+            let genre_type = e.target.dataset.type;
+
+            if(genre_type === 'movie') {
+                const genres = document.querySelectorAll('#movie-genre');
+                for(let genre of genres) {
+                    genre.classList.remove('active');
+                }
+                MoviesTv_params.movies[0].genre = genre_id;
+                MoviesTv_params.movies[0].page = 1;
+
+            } else if(genre_type === 'tvshow') {
+                const genres = document.querySelectorAll('#tv-genre');
+                for(let genre of genres) {
+                    genre.classList.remove('active');
+                }
+                MoviesTv_params.tvshows[0].genre = genre_id;
+                MoviesTv_params.tvshows[0].page = 1;
+            }
+            e.target.classList.add('active');
+            getAllPopular(MoviesTv_params);
+        }else{
+            e.target.classList.remove('active');
+            if(e.target.dataset.type === 'movie') {
+                MoviesTv_params.movies[0].genre = null;
+            } else if(e.target.dataset.type === 'tvshow') {
+                MoviesTv_params.tvshows[0].genre = null;
+            }
+            getAllPopular(MoviesTv_params);
+        }    
     } else if(e.target.id === 'modal_close_btn') {
         details_modal.style.display = 'none';
-    }
+    } else if(e.target.id === 'next_page_movie') {
+        MoviesTv_params.movies[0].page++;
+        getAllPopular(MoviesTv_params);
+    } else if(e.target.id === 'next_page_tvshow') {
+        MoviesTv_params.tvshows[0].page++;
+        getAllPopular(MoviesTv_params);
+    }  
 });

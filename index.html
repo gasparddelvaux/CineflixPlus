@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.45.0/tabler-icons.min.css">
 </head>
 <body>
+    <div class="loader-overlay" id="loader">
+        <span class="loader"></span>
+    </div>
     <div class="container">
         <header>
             <h1>Cinéflix +</h1>
@@ -29,6 +32,7 @@
             </div>
             <div id="movies_display" class="display">
             </div>
+            <button class="next-page-btn" id="next_page_movie">Page suivante</button>
         </section>
         <section id="tvshows_section" class="hidden">
             <h2>Séries</h2>
@@ -36,6 +40,7 @@
             </div>
             <div id="tvshows_display" class="display">
             </div>
+            <button class="next-page-btn" id="next_page_tvshow">Page suivante</button>
         </section>
         <section id="favorites_section" class="hidden">
             <h2>Favoris</h2>
