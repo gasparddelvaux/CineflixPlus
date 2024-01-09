@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cinéflix +</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.45.0/tabler-icons.min.css">
 </head>
 <body>
@@ -24,27 +25,33 @@
         </div>
         <section id="movies_section" class="">
             <h2>Films</h2>
+            <div class="genres" id="genres_movies">
+            </div>
             <div id="movies_display" class="display">
             </div>
         </section>
         <section id="tvshows_section" class="hidden">
             <h2>Séries</h2>
+            <div class="genres" id="genres_tvshows">
+            </div>
             <div id="tvshows_display" class="display">
             </div>
         </section>
         <section id="favorites_section" class="hidden">
             <h2>Favoris</h2>
+            <div id="favorites_display" class="display">
+            </div>
         </section>
         <section id="search_section" class="hidden">
             <h2>Résultats de recherche</h2>
             <div id="search_display" class="display">
             </div>
         </section>
-        <div class="genres">
-            <ul id="genres"></ul>
+    </div>
+    <div id="details_modal" class="modal">
+        <div class="modal-content" id="modal_content">
         </div>
     </div>
-    <div id="movies"></div>
     <script src="js/main.js"></script>
 </body>
 </html>
